@@ -78,11 +78,15 @@ public class BulletEntity extends AbstractEntity {
             setLifetime(0);
         }
         
-        if(isColliding(w.house)) { 
+        
+         for(StructureEntity s : w.getStructureList()) {
             
-            if(!w.house.isPassableCollision())
+             if(isColliding(s)) { 
+            if(!s.isPassableCollision())
             setLifetime(0);
         }
+            }
+        
          
         setLifetime(getLifetime() - 1);
     }

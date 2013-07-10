@@ -44,6 +44,16 @@ public class Viewport {
         debug = false;
     }
     
+    public boolean isOnScreen(AbstractEntity aE) {
+          
+       if(offX+viewWidth>(aE.getLocX()-aE.getRadiusX()) && 
+               offX-viewWidth<(aE.getLocX()+aE.getRadiusX()) &&
+               offY+viewHeight>(aE.getLocY()-aE.getRadiusY()) && 
+               offY-viewHeight<(aE.getLocY()+aE.getRadiusY())) return true;
+       
+       return false;
+   };  
+    
     public void centerOn(int tx, int ty) {
          
        offX = tx - this.viewWidth/2;

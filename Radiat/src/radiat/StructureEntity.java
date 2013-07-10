@@ -14,11 +14,11 @@ public class StructureEntity extends AbstractEntity {
         super(locX, locY, team);
         
       setSpeed(0);
-      setRadiusX(64);
-      setRadiusY(64);
+      setRadiusX(128);
+      setRadiusY(96);
       setCollideType(CollideType.all);
       setPassableCollision(false);
-      setImage("barricade");
+      setImage("houseTestFront");
     }
     
     @Override

@@ -135,7 +135,7 @@ public class Board extends JPanel implements ActionListener{
   
         @Override
         public void mousePressed(MouseEvent e) {
-           world.mouseClick(e);
+           world.mouseClick(e, v);
         } 
         
     }

@@ -20,10 +20,9 @@ public class World implements Drawable{
     public CreatureEntity player;
     public CreatureEntity beast;
     public CreatureEntity friend;
-    
-    public StructureEntity house;
-    
-    public List<BulletEntity> bulletList;
+     
+    private List<StructureEntity> structureList;
+    private List<BulletEntity> bulletList;
     
     private int worldWidth;
     private int worldHeight;
@@ -34,9 +33,8 @@ public class World implements Drawable{
         worldHeight = 3000;
         
         player = new CreatureEntity(100, 100, 0); 
-        beast = new CreatureEntity(400, 400, 1);
-        friend = new CreatureEntity(600, 200, 0); 
-        house = new StructureEntity(300, 100 ,-1);
+        beast = new CreatureEntity(600, 400, 1);
+        friend = new CreatureEntity(600, 200, 0);  
      
         
        player.setImage("playerFront");
@@ -46,19 +44,36 @@ public class World implements Drawable{
        beast.setRadiusY(44);
        
        bulletList = new ArrayList<>();
+       structureList = new ArrayList<>();
+       structureList.add(new StructureEntity(300, 100 ,-1));
+       structureList.add(new StructureEntity(556, 100 ,-1));
+       structureList.add(new StructureEntity(1012, 100 ,-1));
+       structureList.add(new StructureEntity(300, 556 ,-1));
+       structureList.add(new StructureEntity(556, 556 ,-1)); 
+       structureList.add(new StructureEntity(1012, 556 ,-1));
     }
     
     @Override
     public void draw(Graphics g, Viewport v) {
          
         
-        player.draw(g, v);
-        beast.draw(g,v);
-        friend.draw(g,v);
         
-        house.draw(g,v);
+         for(StructureEntity s : getStructureList()) {
+             if(v.isOnScreen(s))
+                s.draw(g, v); 
+            }
         
-        for(BulletEntity b : bulletList) {
+         if(v.isOnScreen(player))
+            player.draw(g, v);
+        
+         if(v.isOnScreen(beast))
+            beast.draw(g,v); 
+         
+         if(v.isOnScreen(friend))  
+            friend.draw(g,v);
+        
+        for(BulletEntity b : getBulletList()) {
+            if(v.isOnScreen(b))
                 b.draw(g, v); 
             }
         
@@ -69,7 +84,7 @@ public class World implements Drawable{
         beast.update(this);
         friend.update(this);
         if(!bulletList.isEmpty()) {
-            for(BulletEntity b : bulletList) {
+            for(BulletEntity b : getBulletList()) {
                 b.update(this); 
             }
         }
@@ -77,7 +92,7 @@ public class World implements Drawable{
     }
 
     private void cleanUp() {
-        Iterator<BulletEntity> iter = bulletList.iterator();
+        Iterator<BulletEntity> iter = getBulletList().iterator();
         while (iter.hasNext()) {
             if (iter.next().getLifetime() <= 0) {
                 iter.remove();
@@ -112,9 +127,9 @@ public class World implements Drawable{
             }       
     }
     
-     void mouseClick(MouseEvent e) {
+     void mouseClick(MouseEvent e, Viewport v) {
         MouseEvent event = e;
-        player.shoot(bulletList, e);
+        player.shoot(getBulletList(), e.getX()+v.getOffX(), e.getY()+v.getOffY());
     }
 
     /**
@@ -143,5 +158,33 @@ public class World implements Drawable{
      */
     public void setWorldHeight(int worldHeight) {
         this.worldHeight = worldHeight;
+    }
+
+    /**
+     * @return the structureList
+     */
+    public List<StructureEntity> getStructureList() {
+        return structureList;
+    }
+
+    /**
+     * @param structureList the structureList to set
+     */
+    public void setStructureList(List<StructureEntity> structureList) {
+        this.structureList = structureList;
+    }
+
+    /**
+     * @return the bulletList
+     */
+    public List<BulletEntity> getBulletList() {
+        return bulletList;
+    }
+
+    /**
+     * @param bulletList the bulletList to set
+     */
+    public void setBulletList(List<BulletEntity> bulletList) {
+        this.bulletList = bulletList;
     }
 }

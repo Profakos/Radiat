@@ -97,25 +97,25 @@ public class CreatureEntity extends AbstractEntity{
                 locX += getVelX();
                 locY += getVelY();
                 
-                
-                if(isColliding(w.house) && !w.house.isPassableCollision())
-                { 
-                    locX -= getVelX(); 
-                    locY -= getVelY(); 
-                }
+                 for(StructureEntity s : w.getStructureList()) {
+                    if(isColliding(s) && !s.isPassableCollision())
+                    { 
+                        locX -= getVelX(); 
+                        locY -= getVelY(); 
+                    }
+                 }
             }
         
     }
     
     
-    public void shoot(List<BulletEntity> b, MouseEvent event) {
+    public void shoot(List<BulletEntity> b, int targetX, int targetY) {
         if(b.size()>50) return;
         
+         
         
-        MouseEvent e = event;
-        
-        int dy = e.getY()-getLocY();
-        int dx = e.getX()-getLocX();
+        int dy = targetY - getLocY();
+        int dx = targetX - getLocX();
         
         if(Math.abs(dx)>=Math.abs(dy))
             facing = dx > 0 ? Directions.Right : Directions.Left;
@@ -147,7 +147,7 @@ public class CreatureEntity extends AbstractEntity{
                 break;
         }
         
-        b.add(new BulletEntity(getLocX()+offX, getLocY()+offY, getTeam(), e.getX(), e.getY()));
+        b.add(new BulletEntity(getLocX()+offX, getLocY()+offY, getTeam(), targetX, targetY));
     }
 
     /**
