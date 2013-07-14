@@ -10,15 +10,16 @@ package radiat;
  */
 public class StructureEntity extends AbstractEntity {
 
-    public StructureEntity(int locX, int locY, int team) {
+    public StructureEntity(int locX, int locY, int team, int radX, int radY, boolean collide, 
+            String name) {
         super(locX, locY, team);
         
       setSpeed(0);
-      setRadiusX(128);
-      setRadiusY(96);
+      setRadiusX(radX);
+      setRadiusY(radY);
       setCollideType(CollideType.all);
-      setPassableCollision(false);
-      setImage("houseTestFront");
+      setPassableCollision(collide);
+      setImage(name);
     }
     
     @Override

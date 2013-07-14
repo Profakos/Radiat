@@ -6,7 +6,6 @@ package radiat;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class CreatureEntity extends AbstractEntity{
       isUp = false;
       isDown = false; 
       
-      setSpeed(6);
+      setSpeed(10);
       setRadiusX(16);
       setRadiusY(32);
       setCollideType(CollideType.other);
@@ -40,15 +39,15 @@ public class CreatureEntity extends AbstractEntity{
     } 
     
     @Override
-    public void draw(Graphics g, Viewport v){
+    public void draw(Graphics g){
         
         if(!this.alive)
             return;
         
-         super.draw(g, v);
+         super.draw(g);
         
          
-         if(!v.isDebug()) return;
+         if(!Viewport.debug) return;
          
         if(getTeam()==0)
             g.setColor(Color.black);

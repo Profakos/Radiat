@@ -14,5 +14,5 @@ public interface Drawable {
     /*
      * draws the object on the board
      */
-    public void draw(Graphics g, Viewport v); 
+    public void draw(Graphics g); 
 }

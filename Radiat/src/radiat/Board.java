@@ -17,7 +17,6 @@ import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener{
     
          
-    public Viewport v;
     public Timer timer;
     
     private World world;
@@ -28,10 +27,7 @@ public class Board extends JPanel implements ActionListener{
     */
          
     public Board(int width, int height) {
-        ImageRegistry.getInstance();
-             
-        
-        v = new Viewport(width, height, 1000, 1000); 
+        ImageRegistry.getInstance(); 
         
         addKeyListener(new BoardKeyAdapter());
         addMouseListener(new BoardMouseAdapter());
@@ -70,18 +66,18 @@ public class Board extends JPanel implements ActionListener{
      */
         
     void scaleVport() { 
-        v.setWorldWidth(world.getWorldWidth());
-        v.setWorldHeight(world.getWorldHeight());
+        Viewport.worldWidth = world.getWorldWidth();
+        Viewport.worldHeight = world.getWorldHeight();
     }
     
     public void doDrawing(Graphics g){
           
-        v.centerOn(world.player.getLocX(), world.player.getLocY());
+        Viewport.centerOn(world.player.getLocX(), world.player.getLocY());
         g.clearRect(0, 0, WIDTH, HEIGHT);
         
-        g.translate(-v.getOffX(), -v.getOffY());
-        world.draw(g, v);
-        g.translate(v.getOffX(), v.getOffY());
+        g.translate(-Viewport.offX, -Viewport.offY);
+        world.draw(g);
+        g.translate(Viewport.offX, Viewport.offY);
     }
 
     /*
@@ -135,7 +131,7 @@ public class Board extends JPanel implements ActionListener{
   
         @Override
         public void mousePressed(MouseEvent e) {
-           world.mouseClick(e, v);
+           world.mouseClick(e);
         } 
         
     }

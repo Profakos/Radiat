@@ -49,14 +49,14 @@ public class BulletEntity extends AbstractEntity {
     } 
     
     @Override
-    public void draw(Graphics g, Viewport v){
+    public void draw(Graphics g){
          
         if(this.lifetime<=0)
             return;
         
-        super.draw(g, v);
+        super.draw(g);
         
-        if(!v.isDebug()) return;
+        if(!Viewport.debug) return;
         g.setColor(Color.red);
         g.drawRect(this.locX-getRadiusX(), this.locY-getRadiusY(), 
                 2*getRadiusX(), 2*getRadiusY());
@@ -67,18 +67,7 @@ public class BulletEntity extends AbstractEntity {
         
         locX += this.getSpeed()*getVelX();
         locY += this.getSpeed()*getVelY();
- 
-        if(isColliding(w.beast)) {
-            w.beast.setAlive(false);
-            setLifetime(0);
-        }
-        
-        if(isColliding(w.friend)) {
-            w.friend.setAlive(false);
-            setLifetime(0);
-        }
-        
-        
+  
          for(StructureEntity s : w.getStructureList()) {
             
              if(isColliding(s)) { 

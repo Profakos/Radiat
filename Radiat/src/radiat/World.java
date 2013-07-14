@@ -10,16 +10,17 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author Akos
  */
 public class World implements Drawable{
+    
+    Random gen;
  
-    public CreatureEntity player;
-    public CreatureEntity beast;
-    public CreatureEntity friend;
+    public CreatureEntity player; 
      
     private List<StructureEntity> structureList;
     private List<BulletEntity> bulletList;
@@ -29,60 +30,43 @@ public class World implements Drawable{
     
     public World(){ 
         
-        worldWidth = 10000;
-        worldHeight = 3000;
+        gen = new Random();
         
-        player = new CreatureEntity(100, 100, 0); 
-        beast = new CreatureEntity(600, 400, 1);
-        friend = new CreatureEntity(600, 200, 0);  
-     
+        worldWidth = 5120;
+        worldHeight = 5120;
         
-       player.setImage("playerFront");
-       friend.setImage("civilFront");
-       beast.setImage("HallFront");
-       beast.setRadiusX(44);
-       beast.setRadiusY(44);
+       player = new CreatureEntity(100, 100, 0);   
+       player.setImage("playerFront"); 
        
        bulletList = new ArrayList<>();
-       structureList = new ArrayList<>();
-       structureList.add(new StructureEntity(300, 100 ,-1));
-       structureList.add(new StructureEntity(556, 100 ,-1));
-       structureList.add(new StructureEntity(1012, 100 ,-1));
-       structureList.add(new StructureEntity(300, 556 ,-1));
-       structureList.add(new StructureEntity(556, 556 ,-1)); 
-       structureList.add(new StructureEntity(1012, 556 ,-1));
+       structureList = new ArrayList<>(); 
+       
+       createCity();
+       
+       player.setLocX(structureList.get(0).getLocX());
+       player.setLocY(structureList.get(0).getLocY());
     }
     
     @Override
-    public void draw(Graphics g, Viewport v) {
-         
-        
+    public void draw(Graphics g) { 
         
          for(StructureEntity s : getStructureList()) {
-             if(v.isOnScreen(s))
-                s.draw(g, v); 
+             if(Viewport.isOnScreen(s))
+                s.draw(g); 
             }
         
-         if(v.isOnScreen(player))
-            player.draw(g, v);
-        
-         if(v.isOnScreen(beast))
-            beast.draw(g,v); 
-         
-         if(v.isOnScreen(friend))  
-            friend.draw(g,v);
+         if(Viewport.isOnScreen(player))
+            player.draw(g); 
         
         for(BulletEntity b : getBulletList()) {
-            if(v.isOnScreen(b))
-                b.draw(g, v); 
+            if(Viewport.isOnScreen(b))
+                b.draw(g); 
             }
         
     }
 
     void update() {
-        player.update(this);
-        beast.update(this);
-        friend.update(this);
+        player.update(this); 
         if(!bulletList.isEmpty()) {
             for(BulletEntity b : getBulletList()) {
                 b.update(this); 
@@ -127,9 +111,9 @@ public class World implements Drawable{
             }       
     }
     
-     void mouseClick(MouseEvent e, Viewport v) {
+     void mouseClick(MouseEvent e) {
         MouseEvent event = e;
-        player.shoot(getBulletList(), e.getX()+v.getOffX(), e.getY()+v.getOffY());
+        player.shoot(getBulletList(), e.getX()+Viewport.offX, e.getY()+Viewport.offY);
     }
 
     /**
@@ -186,5 +170,43 @@ public class World implements Drawable{
      */
     public void setBulletList(List<BulletEntity> bulletList) {
         this.bulletList = bulletList;
+    }
+
+    private void createCity() {
+        
+        int cY = 80;
+        int cX = 80;
+        
+        int tileSize = 64;
+        
+        List<Road> roadList = new ArrayList<>();
+        
+            int rX = cX/2;
+            int rY = cY/2;
+            int rL = gen.nextInt(3)+3;
+            boolean isVert  = gen.nextBoolean(); 
+             
+            
+            roadList.add(new Road(rX, rY, rL, isVert));
+         
+         
+       if(!roadList.isEmpty()) {
+           for(int i = 0; i<roadList.size(); i++) {
+               Road roadTemp = roadList.get(i);
+               if(roadTemp.isIsVertical())
+                    for(int j = 0; j<roadTemp.getLength(); j++){
+                      this.structureList.add(new StructureEntity(tileSize*roadTemp.getX(),
+                              roadTemp.getY() + 4*tileSize*j, -1, tileSize*3/2, tileSize*2, true,
+                              "roadVertical"));
+                    }
+               else
+                   for(int j = 0; j<roadTemp.getLength(); j++){
+                      this.structureList.add(new StructureEntity(tileSize*roadTemp.getX() + 4*tileSize*j,
+                              roadTemp.getY(), -1, tileSize*2, tileSize*3/2, true,
+                              "roadHorizontal"));
+                    }
+           }
+           
+       }
     }
 }

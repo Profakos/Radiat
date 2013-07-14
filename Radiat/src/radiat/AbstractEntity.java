@@ -53,14 +53,14 @@ public abstract class AbstractEntity implements Drawable, Collideable {
      * Drawable implementation
      */
     @Override
-     public void draw(Graphics g, Viewport v){
+     public void draw(Graphics g){
     
         Image imageDraw = ImageRegistry.getImage(getImage());
         if(imageDraw!=null) {
             g.drawImage(imageDraw, locX-getRadiusX(), locY-getRadiusY(), null);
         }
         
-        if(!v.isDebug()) return;
+        if(!Viewport.debug) return;
         g.setColor(Color.darkGray);
         g.drawRect(this.locX-getRadiusX(), this.locY-getRadiusY(), 
                 getRadiusX()*2, getRadiusY()*2);}; 

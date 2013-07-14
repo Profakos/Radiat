@@ -24,8 +24,9 @@ public class GameFrame extends JFrame{
         
         try {
         world = new World();
-        }catch(Exception e){};
-        board.setWorld(world);
+        }catch(Exception e){}
+        board.setWorld(world); 
+        Viewport.initView(768, 640, world.getWorldWidth(), world.getWorldHeight());
         
         board.scaleVport();
         
