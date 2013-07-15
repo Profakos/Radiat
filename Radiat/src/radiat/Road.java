@@ -15,11 +15,12 @@ public class Road {
     private boolean isVertical;
     
     
-    public Road(int x, int y, int length, boolean isVertical) {
-        this.x = x;
-        this.y = y;
-        this.length = length;
-        this.isVertical = isVertical;
+    public Road(String s) { 
+        String[] split = s.split(" ");
+        this.x = Integer.parseInt(split[0]);
+        this.y = Integer.parseInt(split[1]);
+        this.length = Integer.parseInt(split[2]);
+        this.isVertical = Boolean.parseBoolean(split[3]);
     }
 
     /**

@@ -22,9 +22,9 @@ public class GameFrame extends JFrame{
 
     private void initGame() {
         
-        try {
+    //    try {
         world = new World();
-        }catch(Exception e){}
+    //    }catch(Exception e){ System.out.println(e.getCause());}
         board.setWorld(world); 
         Viewport.initView(768, 640, world.getWorldWidth(), world.getWorldHeight());
         

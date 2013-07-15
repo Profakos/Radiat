@@ -32,8 +32,8 @@ public class World implements Drawable{
         
         gen = new Random();
         
-        worldWidth = 5120;
-        worldHeight = 5120;
+        worldWidth = 2560;
+        worldHeight = 2560;
         
        player = new CreatureEntity(100, 100, 0);   
        player.setImage("playerFront"); 
@@ -42,9 +42,18 @@ public class World implements Drawable{
        structureList = new ArrayList<>(); 
        
        createCity();
+        
        
-       player.setLocX(structureList.get(0).getLocX());
-       player.setLocY(structureList.get(0).getLocY());
+
+       if(!structureList.isEmpty()) {
+           
+           for(StructureEntity sE : structureList) {
+            if(sE.getType()!= StructureType.road) continue;
+            player.setLocX(structureList.get(0).getLocX());
+            player.setLocY(structureList.get(0).getLocY()); 
+            break;
+            }
+       }    
     }
     
     @Override
@@ -174,36 +183,40 @@ public class World implements Drawable{
 
     private void createCity() {
         
-        int cY = 80;
-        int cX = 80;
+        int cY = 40;
+        int cX = 40;
         
         int tileSize = 64;
+        int roadChunk = tileSize*3;
         
         List<Road> roadList = new ArrayList<>();
         
-            int rX = cX/2;
-            int rY = cY/2;
-            int rL = gen.nextInt(3)+3;
-            boolean isVert  = gen.nextBoolean(); 
-             
-            
-            roadList.add(new Road(rX, rY, rL, isVert));
-         
+      
+        roadList.add(new Road("0 2 6 false"));
+        roadList.add(new Road("6 2 9 true"));
+        roadList.add(new Road("2 5 3 true"));
+        roadList.add(new Road("3 6 3 false"));
+        roadList.add(new Road("7 6 6 false"));
+        roadList.add(new Road("7 10 7 false"));
+        roadList.add(new Road("13 2 9 true"));
+        roadList.add(new Road("14 10 6 false"));
+        roadList.add(new Road("12 11 6 true"));
+        roadList.add(new Road("0 14 12 false"));
          
        if(!roadList.isEmpty()) {
            for(int i = 0; i<roadList.size(); i++) {
                Road roadTemp = roadList.get(i);
                if(roadTemp.isIsVertical())
                     for(int j = 0; j<roadTemp.getLength(); j++){
-                      this.structureList.add(new StructureEntity(tileSize*roadTemp.getX(),
-                              roadTemp.getY() + 4*tileSize*j, -1, tileSize*3/2, tileSize*2, true,
-                              "roadVertical"));
+                      this.structureList.add(new StructureEntity(roadTemp.getX()*roadChunk,
+                              (roadTemp.getY()+j)*roadChunk, -1, roadChunk/2, roadChunk/2, true,
+                              "roadVertical", StructureType.road));
                     }
                else
                    for(int j = 0; j<roadTemp.getLength(); j++){
-                      this.structureList.add(new StructureEntity(tileSize*roadTemp.getX() + 4*tileSize*j,
-                              roadTemp.getY(), -1, tileSize*2, tileSize*3/2, true,
-                              "roadHorizontal"));
+                      this.structureList.add(new StructureEntity((roadTemp.getX()+j)*roadChunk,
+                              roadTemp.getY()*roadChunk, -1, roadChunk/2, roadChunk/2, true,
+                              "roadHorizontal", StructureType.road));
                     }
            }
            
