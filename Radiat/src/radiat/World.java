@@ -260,16 +260,38 @@ public class World implements Drawable{
                int rL = roadTemp.getLength();
                int houseNum = (rL*roadChunk - tileSize ) / (houseLong + (roadTemp.isIsVertical() ? 3*tileSize/2 : tileSize));
                
-               //one tile between houses and the road
+               int houseoffset = (rL*roadChunk - tileSize )%(houseLong + (roadTemp.isIsVertical() ? 3*tileSize/2 : tileSize));
+                
+               //one tile between houses and the road  
+               int upOffsetLeft = 0;
+               int downOffsetLeft = 0;
+               
+               upOffsetLeft += houseoffset;
+               downOffsetLeft += houseoffset;
+                        
+               int upOffsetUsed = 0;
+               int downOffsetUsed = 0; 
                
                for(int hn=0; hn<houseNum; hn++) {
                     if(roadTemp.isIsVertical()) { 
+                        
+                        
+                        int upDelta = upOffsetLeft==0 ? -1*gen.nextInt(12) : gen.nextInt(upOffsetLeft); 
+                        
+                        upOffsetLeft -= upDelta;
+                        upOffsetUsed += upDelta;
+                        
+                        int downDelta = downOffsetLeft==0 ? -1*gen.nextInt(12) : gen.nextInt(downOffsetLeft); 
+                        downOffsetLeft -= downDelta;
+                        downOffsetUsed += downDelta; 
+                         
+                     
                      StructureEntity temphouse1 = new StructureEntity(rX*roadChunk + houseShort + tileSize, 
-                                rY*roadChunk +  tileSize + hn*(3*tileSize/2+houseLong), -1, houseShort/2, houseLong/2, false,
+                                rY*roadChunk +  tileSize + hn*(3*tileSize/2+houseLong) + downOffsetUsed, -1, houseShort/2, houseLong/2, false,
                                 "houseVertical", StructureType.house);
                      
                      StructureEntity temphouse2 = new StructureEntity(rX*roadChunk - houseShort - tileSize, 
-                                rY*roadChunk  + tileSize + hn*(3*tileSize/2+houseLong), -1, houseShort/2, houseLong/2, false,
+                                rY*roadChunk  + tileSize + hn*(3*tileSize/2+houseLong) + upOffsetUsed, -1, houseShort/2, houseLong/2, false,
                                 "houseVertical", StructureType.house);
                        
                      boolean problem1 = false;
@@ -291,11 +313,21 @@ public class World implements Drawable{
                         structureList.add(temphouse2);
                     }
                     else {
+                        
+                        int upDelta = upOffsetLeft==0 ? -1*gen.nextInt(12) : gen.nextInt(upOffsetLeft); 
+                        upOffsetLeft -= upDelta;
+                        upOffsetUsed += upDelta;
+                        
+                        int downDelta = downOffsetLeft==0 ? -1*gen.nextInt(12) : gen.nextInt(downOffsetLeft); 
+                        downOffsetLeft -= downDelta;
+                        downOffsetUsed += downDelta;
+                        
+                         
                    
-                        StructureEntity temphouse1 = new StructureEntity(rX*roadChunk + tileSize + hn*(tileSize+houseLong) , rY*roadChunk + houseShort + tileSize, -1, houseLong/2, houseShort/2, false,
+                        StructureEntity temphouse1 = new StructureEntity(rX*roadChunk + tileSize + hn*(tileSize+houseLong) + downOffsetUsed, rY*roadChunk + houseShort + tileSize, -1, houseLong/2, houseShort/2, false,
                            "houseHorizontal", StructureType.house);
                         
-                        StructureEntity temphouse2 = new StructureEntity(rX*roadChunk + tileSize + hn*(tileSize+houseLong), rY*roadChunk - houseShort - tileSize, -1, houseLong/2, houseShort/2, false,
+                        StructureEntity temphouse2 = new StructureEntity(rX*roadChunk + tileSize + hn*(tileSize+houseLong) + upOffsetUsed, rY*roadChunk - houseShort - tileSize, -1, houseLong/2, houseShort/2, false,
                            "houseHorizontal", StructureType.house);
                                 
                          boolean problem1 = false;
