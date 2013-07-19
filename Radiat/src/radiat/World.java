@@ -189,37 +189,136 @@ public class World implements Drawable{
         int tileSize = 64;
         int roadChunk = tileSize*3;
         
-        List<Road> roadList = new ArrayList<>();
+        List<RoadGenerator> roadList = new ArrayList<>();
         
       
-        roadList.add(new Road("0 2 6 false"));
-        roadList.add(new Road("6 2 9 true"));
-        roadList.add(new Road("2 5 3 true"));
-        roadList.add(new Road("3 6 3 false"));
-        roadList.add(new Road("7 6 6 false"));
-        roadList.add(new Road("7 10 7 false"));
-        roadList.add(new Road("13 2 9 true"));
-        roadList.add(new Road("14 10 6 false"));
-        roadList.add(new Road("12 11 6 true"));
-        roadList.add(new Road("0 14 12 false"));
+        roadList.add(new RoadGenerator("0 2 6 false"));
+        roadList.add(new RoadGenerator("6 2 10 true"));
+        roadList.add(new RoadGenerator("2 5 3 true"));
+        roadList.add(new RoadGenerator("3 6 3 false"));
+        roadList.add(new RoadGenerator("7 6 6 false"));
+        roadList.add(new RoadGenerator("7 10 7 false"));
+        roadList.add(new RoadGenerator("13 2 9 true"));
+        roadList.add(new RoadGenerator("14 9 6 false"));
+        roadList.add(new RoadGenerator("12 11 6 true"));
+        roadList.add(new RoadGenerator("0 14 12 false"));
          
+         /*
+          * Generates the road tiles and houses
+          */
        if(!roadList.isEmpty()) {
-           for(int i = 0; i<roadList.size(); i++) {
-               Road roadTemp = roadList.get(i);
-               if(roadTemp.isIsVertical())
-                    for(int j = 0; j<roadTemp.getLength(); j++){
-                      this.structureList.add(new StructureEntity(roadTemp.getX()*roadChunk,
-                              (roadTemp.getY()+j)*roadChunk, -1, roadChunk/2, roadChunk/2, true,
+           for(RoadGenerator roadTemp : roadList) {
+             //  RoadGenerator roadTemp = roadList.get(i);
+               
+               int rX = roadTemp.getX();
+               int rY = roadTemp.getY();
+               
+               if(roadTemp.isIsVertical()) {
+                   
+                   int rL = roadTemp.getLength();
+                   
+                    for(int j = 0; j<rL; j++){
+                      this.structureList.add(new StructureEntity(rX*roadChunk,
+                              (rY+j)*roadChunk, -1, roadChunk/2, roadChunk/2, true,
                               "roadVertical", StructureType.road));
+                      
                     }
-               else
-                   for(int j = 0; j<roadTemp.getLength(); j++){
-                      this.structureList.add(new StructureEntity((roadTemp.getX()+j)*roadChunk,
-                              roadTemp.getY()*roadChunk, -1, roadChunk/2, roadChunk/2, true,
+                     
+                    
+                //  structureList.add(new StructureEntity(rX*roadChunk, rY*roadChunk, -1, 96, 128, false,
+                       //   "houseVertical", StructureType.house));
+               }
+               else {
+                   
+                   int rL = roadTemp.getLength();
+                   
+                   for(int j = 0; j<rL; j++){
+                      this.structureList.add(new StructureEntity((rX+j)*roadChunk,
+                              rY*roadChunk, -1, roadChunk/2, roadChunk/2, true,
                               "roadHorizontal", StructureType.road));
                     }
+               }
            }
            
        }
+       
+       /*
+        * Housemaking loop
+        */
+       if(!roadList.isEmpty()) {
+           
+               int houseShort = 3*tileSize;
+               int houseLong = 4*tileSize;
+               
+           for(RoadGenerator roadTemp : roadList) {
+             //  RoadGenerator roadTemp = roadList.get(i);
+               
+               int rX = roadTemp.getX();
+               int rY = roadTemp.getY();
+               
+               
+               int rL = roadTemp.getLength();
+               int houseNum = (rL*roadChunk - tileSize ) / (houseLong + (roadTemp.isIsVertical() ? 3*tileSize/2 : tileSize));
+               
+               //one tile between houses and the road
+               
+               for(int hn=0; hn<houseNum; hn++) {
+                    if(roadTemp.isIsVertical()) { 
+                     StructureEntity temphouse1 = new StructureEntity(rX*roadChunk + houseShort + tileSize, 
+                                rY*roadChunk +  tileSize + hn*(3*tileSize/2+houseLong), -1, houseShort/2, houseLong/2, false,
+                                "houseVertical", StructureType.house);
+                     
+                     StructureEntity temphouse2 = new StructureEntity(rX*roadChunk - houseShort - tileSize, 
+                                rY*roadChunk  + tileSize + hn*(3*tileSize/2+houseLong), -1, houseShort/2, houseLong/2, false,
+                                "houseVertical", StructureType.house);
+                       
+                     boolean problem1 = false;
+                     boolean problem2 = false;
+                     
+                        for(StructureEntity sE : structureList) {
+                            if(!problem1 && sE.isColliding(temphouse1))
+                                problem1 = true;
+                            
+                            if(!problem2 && sE.isColliding(temphouse2)) {
+                                problem2 = true;
+                            }
+                        }
+                        
+                        if(!problem1)
+                        structureList.add(temphouse1);
+                   
+                        if(!problem2)
+                        structureList.add(temphouse2);
+                    }
+                    else {
+                   
+                        StructureEntity temphouse1 = new StructureEntity(rX*roadChunk + tileSize + hn*(tileSize+houseLong) , rY*roadChunk + houseShort + tileSize, -1, houseLong/2, houseShort/2, false,
+                           "houseHorizontal", StructureType.house);
+                        
+                        StructureEntity temphouse2 = new StructureEntity(rX*roadChunk + tileSize + hn*(tileSize+houseLong), rY*roadChunk - houseShort - tileSize, -1, houseLong/2, houseShort/2, false,
+                           "houseHorizontal", StructureType.house);
+                                
+                         boolean problem1 = false;
+                     boolean problem2 = false;
+                     
+                        for(StructureEntity sE : structureList) {
+                            if(!problem1 && sE.isColliding(temphouse1))
+                                problem1 = true;
+                            
+                            if(!problem2 && sE.isColliding(temphouse2)) {
+                                problem2 = true;
+                            }
+                        }
+                        
+                        if(!problem1)
+                        structureList.add(temphouse1);
+                   
+                        if(!problem2)
+                        structureList.add(temphouse2);
+                    }
+                }
+           }
+       }
+        
     }
 }

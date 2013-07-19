@@ -12,7 +12,7 @@ public class StructureEntity extends AbstractEntity {
 
     private StructureType type;
     
-    public StructureEntity(int locX, int locY, int team, int radX, int radY, boolean collide, 
+    public StructureEntity(int locX, int locY, int team, int radX, int radY, boolean passable, 
             String name, StructureType type) {
         super(locX, locY, team);
         
@@ -20,7 +20,7 @@ public class StructureEntity extends AbstractEntity {
       setRadiusX(radX);
       setRadiusY(radY);
       setCollideType(CollideType.all);
-      setPassableCollision(collide);
+      setPassableCollision(passable);
       setImage(name);
       
       this.type = type;

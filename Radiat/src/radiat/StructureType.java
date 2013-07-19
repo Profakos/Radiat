@@ -9,5 +9,6 @@ package radiat;
  * @author Akos
  */
 public enum StructureType {
-    road
+    road,
+    house
 }
